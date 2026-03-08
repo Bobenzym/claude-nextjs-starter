@@ -1,0 +1,14 @@
+{
+  "enabledMcpjsonServers": [
+    "playwright"
+  ],
+  "enableAllProjectMcpServers": true,
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash",
+      "WebFetch",
+      "mcp__playwright"
+    ]
+  }
+}
