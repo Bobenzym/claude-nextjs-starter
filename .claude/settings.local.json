@@ -1,34 +1,46 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch",
+      "Read",
       "Bash",
       "WebFetch",
-      "mcp__playwright"
-    ]
+      "WebSearch",
+      "mcp__ide",
+      "mcp__shadcn",
+      "mcp__playwright",
+      "mcp__sequential-thinking",
+      "mcp__shadcn",
+      "mcp__context7"
+    ],
+    "deny": [],
+    "ask": []
   },
-  "enableAllProjectMcpServers": true,
+  "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
-    "playwright"
+    "playwright",
+    "context7",
+    "sequential-thinking",
+    "shadcn"
   ],
   "hooks": {
     "Notification": [
       {
-        "matcher": "permission_prompt",
+        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/slack-notification.sh\""
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/notification-hook.sh"
           }
         ]
       }
     ],
     "Stop": [
       {
+        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/slack-stop.sh\""
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stop-hook.sh"
           }
         ]
       }
