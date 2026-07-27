@@ -54,7 +54,7 @@ export function Footer() {
 
           {/* 카피라이트 */}
           <p className="text-sm text-muted-foreground text-center md:text-right">
-            © 2024 {APP_NAME}. 모든 권리 보유.
+            © {new Date().getFullYear()} {APP_NAME}. 모든 권리 보유.
           </p>
         </div>
       </div>

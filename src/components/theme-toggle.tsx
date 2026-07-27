@@ -31,7 +31,7 @@ export function ThemeToggle() {
           variant="ghost"
           size="icon"
           onClick={() => setTheme(isDark ? "light" : "dark")}
-          className="text-muted-foreground hover:text-accent"
+          className="text-muted-foreground hover:text-foreground"
         >
           {isDark ? (
             <Moon className="h-[1.2rem] w-[1.2rem]" />

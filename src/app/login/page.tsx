@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,23 +12,31 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // 언마운트 시 데모용 타이머 정리
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    // 실제 로그인 로직은 여기에 추가됨
-    console.log("로그인 시도:", { email, password })
+    // 실제 인증 요청은 여기에 추가한다 (자격 증명은 절대 로그로 남기지 않는다)
 
     // 데모 목적으로 2초 후 완료
-    setTimeout(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => {
       setIsLoading(false)
       alert(`${email}로 로그인했습니다.`)
     }, 2000)
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl">로그인</CardTitle>
@@ -93,6 +101,6 @@ export default function LoginPage() {
           </CardFooter>
         </form>
       </Card>
-    </main>
+    </div>
   )
 }

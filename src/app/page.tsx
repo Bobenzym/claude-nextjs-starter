@@ -74,8 +74,8 @@ export default function Home() {
             const Icon = feature.icon;
             return (
               <Card key={feature.title} className="p-6 space-y-4">
-                <div className="h-12 w-12 rounded-lg bg-accent/10 flex items-center justify-center">
-                  <Icon className="h-6 w-6 text-accent" />
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Icon className="h-6 w-6 text-primary" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="font-semibold text-lg">{feature.title}</h3>

@@ -38,16 +38,16 @@ export function Header() {
 
         {/* 우측 액션 버튼 */}
         <div className="flex items-center gap-2">
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="GitHub"
-          >
-            <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" asChild>
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="GitHub"
+            >
               <Github className="h-5 w-5" />
-            </Button>
-          </a>
+            </a>
+          </Button>
           <ThemeToggle />
 
           {/* 모바일 메뉴 토글 */}
@@ -55,6 +55,8 @@ export function Header() {
             className="md:hidden p-2 rounded-lg hover:bg-accent transition-colors"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="메뉴 토글"
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           >
             {isOpen ? (
               <X className="w-5 h-5" />
@@ -67,7 +69,7 @@ export function Header() {
 
       {/* 모바일 메뉴 */}
       {isOpen && (
-        <div className="md:hidden border-t border-border bg-muted/50">
+        <div id="mobile-menu" className="md:hidden border-t border-border bg-muted/50">
           <nav className="flex flex-col gap-2 p-4">
             {NAV_LINKS.map((link) => (
               <Link
@@ -76,6 +78,7 @@ export function Header() {
                 className="px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
+                onClick={() => setIsOpen(false)}
               >
                 {link.label}
               </Link>

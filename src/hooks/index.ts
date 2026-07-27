@@ -112,6 +112,9 @@ export function useCopyToClipboard(timeout: number = 2000) {
     (text: string) => {
       if (typeof window === "undefined") return;
 
+      // 연속 호출 시 이전 타이머가 copied를 조기에 해제하는 것을 방지
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
       navigator.clipboard
         .writeText(text)
         .then(() => {
@@ -126,6 +129,13 @@ export function useCopyToClipboard(timeout: number = 2000) {
     },
     [timeout]
   );
+
+  // 언마운트 시 타이머 정리
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   return { copied, copy };
 }

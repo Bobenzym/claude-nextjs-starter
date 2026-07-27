@@ -34,7 +34,7 @@ export default function DocsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="p-6 space-y-4">
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-lg font-bold text-primary">
                 1
               </span>
               <h3 className="text-lg font-semibold">저장소 클론</h3>
@@ -46,7 +46,7 @@ export default function DocsPage() {
 
           <Card className="p-6 space-y-4">
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-lg font-bold text-primary">
                 2
               </span>
               <h3 className="text-lg font-semibold">의존성 설치</h3>
@@ -58,7 +58,7 @@ export default function DocsPage() {
 
           <Card className="p-6 space-y-4">
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-lg font-bold text-primary">
                 3
               </span>
               <h3 className="text-lg font-semibold">개발 서버 실행</h3>
