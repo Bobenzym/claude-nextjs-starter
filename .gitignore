@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# claude code (서브에이전트 메모리는 로컬에만 보관)
+.claude/agent-memory/
+
+# playwright mcp (스냅샷·스크린샷 등 실행 산출물)
+.playwright-mcp/
