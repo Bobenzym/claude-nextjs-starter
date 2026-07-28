@@ -6,7 +6,6 @@
       "WebFetch",
       "WebSearch",
       "mcp__ide",
-      "mcp__shadcn",
       "mcp__playwright",
       "mcp__sequential-thinking",
       "mcp__shadcn",
@@ -21,29 +20,5 @@
     "context7",
     "sequential-thinking",
     "shadcn"
-  ],
-  "hooks": {
-    "Notification": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/notification-hook.sh"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stop-hook.sh"
-          }
-        ]
-      }
-    ]
-  }
+  ]
 }
