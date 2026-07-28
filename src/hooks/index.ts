@@ -1,22 +1,56 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useSyncExternalStore,
+} from "react";
+
+// 구독이 필요 없는 스토어용 no-op (참조 고정을 위해 모듈 스코프에 선언)
+const noopSubscribe = () => () => {};
 
 // SSR 하이드레이션 불일치 방지 훅
+// 서버 렌더링과 하이드레이션 중에는 false, 클라이언트 마운트 이후 true를 반환한다.
 export function useIsMounted() {
-  const [isMounted, setIsMounted] = useState(false);
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true, // 클라이언트 스냅샷
+    () => false // 서버 스냅샷
+  );
+}
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  return isMounted;
+/**
+ * localStorage에서 값을 읽어 파싱한다. SSR 환경이거나 실패 시 fallback을 반환한다.
+ */
+function readStoredValue<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const item = window.localStorage.getItem(key);
+    return item ? (JSON.parse(item) as T) : fallback;
+  } catch (error) {
+    console.error(`localStorage 읽기 오류 [${key}]:`, error);
+    return fallback;
+  }
 }
 
 // localStorage 상태 관리 훅 (SSR 안전)
 export function useLocalStorage<T>(key: string, initialValue: T) {
-  const [storedValue, setStoredValue] = useState<T>(initialValue);
+  // 초기화 시점에 바로 읽는다. 서버에서는 initialValue가 사용되고,
+  // 클라이언트 첫 렌더는 아래 isMounted 게이트가 initialValue를 반환하므로
+  // 하이드레이션 불일치가 발생하지 않는다.
+  const [storedValue, setStoredValue] = useState<T>(() =>
+    readStoredValue(key, initialValue)
+  );
+  const [currentKey, setCurrentKey] = useState(key);
   const isMounted = useIsMounted();
+
+  // key가 바뀌면 렌더 중에 값을 다시 읽는다 (effect보다 권장되는 패턴)
+  if (currentKey !== key) {
+    setCurrentKey(key);
+    setStoredValue(readStoredValue(key, initialValue));
+  }
 
   // 값 설정 함수
   const setValue = useCallback(
@@ -34,19 +68,6 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     },
     [key, storedValue]
   );
-
-  // 마운트 시 localStorage에서 값 로드
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const item = window.localStorage.getItem(key);
-      if (item) {
-        setStoredValue(JSON.parse(item));
-      }
-    } catch (error) {
-      console.error(`localStorage 읽기 오류 [${key}]:`, error);
-    }
-  }, [key, isMounted]);
 
   return [isMounted ? storedValue : initialValue, setValue] as const;
 }
@@ -67,25 +88,26 @@ export function useDebounce<T>(value: T, delay: number = 500): T {
 }
 
 // 미디어 쿼리 감지 훅 (SSR 안전)
+// 서버 렌더링과 하이드레이션 중에는 false, 이후 실제 매칭 결과를 반환한다.
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
-  const isMounted = useIsMounted();
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      const mediaQuery = window.matchMedia(query);
+      mediaQuery.addEventListener("change", onStoreChange);
+      return () => mediaQuery.removeEventListener("change", onStoreChange);
+    },
+    [query]
+  );
 
-  useEffect(() => {
-    if (!isMounted) return;
+  const getSnapshot = useCallback(() => window.matchMedia(query).matches, [
+    query,
+  ]);
 
-    const mediaQuery = window.matchMedia(query);
-    setMatches(mediaQuery.matches);
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setMatches(e.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [query, isMounted]);
-
-  return isMounted ? matches : false;
+  return useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    () => false // 서버 스냅샷
+  );
 }
 
 // boolean 상태 토글 훅
